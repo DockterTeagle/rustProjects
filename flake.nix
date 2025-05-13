@@ -30,15 +30,7 @@
         devenv.flakeModule
         treefmt-nix.flakeModule
       ];
-      perSystem = {
-        self',
-        inputs',
-        pkgs,
-        system,
-        config,
-        lib,
-        ...
-      }: {
+      perSystem = {system, ...}: {
         _module.args.pkgs = import nixpkgs {
           inherit system;
           overlays = with inputs; [
@@ -46,11 +38,7 @@
             # zig-overlay.overlays.default
           ];
         };
-        devenv = import ./flakeModules/devenv-shells.nix {
-          inherit self' inputs' pkgs system lib;
-          inherit (config) treefmt;
-        };
-        treefmt = import ./flakeModules/treefmt.nix {inherit self' inputs' pkgs system lib;};
+        imports = [./flakeModules];
       };
     };
 }
